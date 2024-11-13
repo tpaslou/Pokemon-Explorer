@@ -4,7 +4,11 @@ struct PokemonView: View {
     @EnvironmentObject var vm: ViewModel
     let pokemon: Pokemon
     let dimensions: Double = 140
-    @State private var pokemonID: Int? // Store the ID of the Pokémon
+    
+    // Retrieve the Pokémon ID from ViewModel's cached IDs dictionary
+    private var pokemonID: Int? {
+        vm.pokemonIDs[pokemon.name]
+    }
     
     var body: some View {
         VStack {
@@ -32,7 +36,8 @@ struct PokemonView: View {
                     }
                 }
             } else {
-                ProgressView() // Show progress while fetching the ID
+                // Placeholder if ID is not available
+                ProgressView()
                     .frame(width: dimensions, height: dimensions)
             }
 
@@ -40,14 +45,9 @@ struct PokemonView: View {
                 .font(.system(size: 16, weight: .regular, design: .monospaced))
                 .padding(.bottom, 20)
         }
-        .onAppear {
-            // Fetch the Pokémon ID and update the pokemonID state
-            vm.getPokemonID(pokemon: pokemon) { id in
-                self.pokemonID = id
-            }
-        }
     }
 }
+
 #Preview {
     PokemonView(pokemon: Pokemon.samplePokemon)
         .environmentObject(ViewModel())

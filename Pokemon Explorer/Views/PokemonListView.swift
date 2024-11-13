@@ -1,19 +1,17 @@
 import SwiftUI
 
+import SwiftUI
+
 struct PokemonListView: View {
     @EnvironmentObject var vm: ViewModel
     @State private var selectedPokemon: Pokemon?
-
-    private let adaptiveColumns = [
-        GridItem(.adaptive(minimum: 150))
-    ]
-    
+    private let adaptiveColumns = [GridItem(.adaptive(minimum: 150))]
     @State private var itemsToShow = 10
-    
+
     var body: some View {
         VStack {
             SearchBarView(searchText: $vm.searchText)
-            
+
             if vm.filteredPokemon.isEmpty {
                 Text("No pokemons were found")
                     .foregroundColor(.red)
@@ -22,18 +20,22 @@ struct PokemonListView: View {
                 ScrollView {
                     LazyVGrid(columns: adaptiveColumns, spacing: 10) {
                         ForEach(vm.filteredPokemon.prefix(itemsToShow)) { pokemon in
-                
                             Button(action: {
-                                selectedPokemon = pokemon // Set the selected Pokémon
+                                selectedPokemon = pokemon
                             }) {
                                 PokemonView(pokemon: pokemon)
                             }
                         }
                     }
-                    
+
                     if itemsToShow < vm.filteredPokemon.count {
                         Button("Show More") {
                             itemsToShow += 10
+                            // Trigger a view update to reload images
+                            DispatchQueue.main.async {
+                                // Add a slight delay to let view update with new items
+                                itemsToShow += 0
+                            }
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -57,12 +59,8 @@ struct PokemonListView: View {
                 EmptyView()
             }
         )
-        .onAppear {
-            //print(vm.filteredPokemon.prefix(itemsToShow))
-        }
     }
 }
-
 struct SearchBarView: View {
     @Binding var searchText: String
     

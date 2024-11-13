@@ -41,7 +41,6 @@ struct ContentView: View {
                     vm.getPokemonByType(pokemonType: selectedType)
                     // Set isSearching to true only after data is loaded
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        // Give it a moment for the data to load
                         isSearching = true
                     }
                 }) {

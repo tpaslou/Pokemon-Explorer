@@ -15,55 +15,60 @@ final class ViewModel: ObservableObject {
     @Published var pokemonDetails: DetailedPokemon?
     @Published var searchText = ""
     
+    // Dictionary to store IDs by Pokemon name for later reference
+    var pokemonIDs: [String: Int] = [:]
+    
     var filteredPokemon: [Pokemon] {
         return searchText == "" ? pokemonList : pokemonList.filter({
             $0.name.contains(searchText.lowercased())
         })
     }
     
-    init() {
-        // This could be used for initialization if needed in the future
-    }
-    
     func getPokemonByType(pokemonType: PokemonType) {
-        // Fetch Pokémon by type using PokemonManager
         pokemonManager.getPokemonByType(pokemonType: pokemonType) { data in
             DispatchQueue.main.async {
-                //print("Fetched data: \(data)")  // Check the structure of the data
                 self.pokemonList = data
+                
+                // For each Pokemon, fetch its ID and store it
+                for pokemon in data {
+                    self.getPokemonID(pokemon: pokemon) { id in
+                        if let id = id {
+                            self.pokemonIDs[pokemon.name] = id
+                        }
+                    }
+                }
             }
         }
     }
     
     func getPokemonID(pokemon: Pokemon, completion: @escaping (Int?) -> Void) {
-        // Fetch the details for the given Pokémon
-        getDetails(pokemon: pokemon)
-        
-        // Use a delay to wait for the data to be fetched asynchronously
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // Adjust the delay based on how long it takes to fetch the data
-            // Return the ID from the fetched details
-            if let id = self.pokemonDetails?.id {
-                completion(id)
-            } else {
-                completion(nil)
+        // Check if ID is already cached
+        if let cachedID = pokemonIDs[pokemon.name] {
+            completion(cachedID)  // Return cached ID
+        } else {
+            // Fetch details if not cached
+            getDetails(pokemon: pokemon) { [weak self] details in
+                guard let self = self, let id = details?.id else {
+                    completion(nil)
+                    return
+                }
+                self.pokemonIDs[pokemon.name] = id  // Cache the ID
+                completion(id)  // Return the fetched ID
             }
         }
     }
-    
-    func getDetails(pokemon: Pokemon) {
-        // Directly fetch details by Pokémon name without using ID
-        self.pokemonDetails = DetailedPokemon(id: 0, height: 0, weight: 0, stats: [])
-        
+
+    func getDetails(pokemon: Pokemon, completion: @escaping (DetailedPokemon?) -> Void) {
         pokemonManager.getDetailedPokemon(name: pokemon.name) { data in
             DispatchQueue.main.async {
-                self.pokemonDetails = data
+                self.pokemonDetails = data  // Update `pokemonDetails` for current access
+                completion(data)  // Return the fetched details
             }
         }
     }
     
     func formatStat(value: Int) -> String {
         let dValue = Double(value)
-        let string = String(format: "%.2f", dValue / 10)
-        return string
+        return String(format: "%.2f", dValue / 10)
     }
 }
