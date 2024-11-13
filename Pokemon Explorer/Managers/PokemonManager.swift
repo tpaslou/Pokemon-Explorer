@@ -1,17 +1,7 @@
 import Foundation
 
 class PokemonManager {
-    /*
-    func getPokemnon() -> [Pokemon] {
-        // Decode the data from the local JSON file using the decode helper
-        let data: PokemonPage = Bundle.main.decode(file: "pokemon.json")
-        
-        // Extract Pokémon data from the 'pokemon' field inside 'PokemonEntry'
-        let pokemon: [Pokemon] = data.pokemon.map { $0.pokemon }
-        
-        return pokemon
-    }*/
-
+    
     
     func getDetailedPokemon(name: String, completion: @escaping (DetailedPokemon) -> ()) {
         // Construct the URL using the Pokémon name

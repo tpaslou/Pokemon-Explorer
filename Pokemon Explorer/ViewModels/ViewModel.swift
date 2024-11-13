@@ -66,9 +66,4 @@ final class ViewModel: ObservableObject {
             }
         }
     }
-    
-    func formatStat(value: Int) -> String {
-        let dValue = Double(value)
-        return String(format: "%.2f", dValue / 10)
-    }
 }
