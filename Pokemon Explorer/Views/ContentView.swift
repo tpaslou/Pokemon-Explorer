@@ -39,8 +39,8 @@ struct ContentView: View {
                 Button(action: {
                     // Trigger the API call
                     vm.getPokemonByType(pokemonType: selectedType)
-                    // Set isSearching to true only after data is loaded
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now()) {
                         isSearching = true
                     }
                 }) {
