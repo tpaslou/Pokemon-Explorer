@@ -14,23 +14,29 @@ struct PokemonDetailView: View {
     
     var body: some View {
         VStack {
-                    PokemonView(pokemon: pokemon)
+            PokemonView(pokemon: pokemon)
+            
+            VStack(spacing: 10) {
+                // Access cached Pokémon details
+                if let pokemonID = vm.pokemonIDs[pokemon.name], let details = vm.pokemonDetailsCache[pokemonID] {
+                    Text("**ID**: \(details.id)")
+                    Text("**Weight**: \(details.weight)")
+                    Text("**Height**: \(details.height)")
+                    Text("**HP**: \(details.hp)")
+                    Text("**Attack**: \(details.attack)")
+                    Text("**Defense**: \(details.defense)")
+                } else {
+                    Text("Loading details...")
+                        .foregroundColor(.gray)
                     
-                    VStack(spacing: 10) {
-                        Text("**ID**: \(vm.pokemonDetails?.id ?? 0)")
-                        Text("**Weight**: \(vm.pokemonDetails?.weight ?? 0)")
-                        Text("**Height**: \(vm.pokemonDetails?.height ?? 0)")
-                        Text("**HP**: \(vm.pokemonDetails?.hp ?? 0)")
-                        Text("**Attack**: \(vm.pokemonDetails?.attack ?? 0)")
-                        Text("**Defence**: \(vm.pokemonDetails?.defense ?? 0)")
-
-                        
-                    }
-                    .padding()
                 }
-                .onAppear {
-                    
-                }
+            }
+            .padding()
+        }
+        .onAppear {
+            // Fetch and cache details when the view appears
+            //vm.fetchAndCacheDetails(for: pokemon)
+        }
     }
 }
 

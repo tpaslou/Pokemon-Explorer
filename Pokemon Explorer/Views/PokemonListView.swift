@@ -1,7 +1,5 @@
 import SwiftUI
 
-import SwiftUI
-
 struct PokemonListView: View {
     @EnvironmentObject var vm: ViewModel
     @State private var selectedPokemon: Pokemon?
@@ -23,7 +21,7 @@ struct PokemonListView: View {
                             Button(action: {
                                 selectedPokemon = pokemon
                             }) {
-                                PokemonView(pokemon: pokemon)
+                                PokemonView(pokemon: pokemon) // This will trigger the cache and refresh image
                             }
                         }
                     }
@@ -31,11 +29,6 @@ struct PokemonListView: View {
                     if itemsToShow < vm.filteredPokemon.count {
                         Button("Show More") {
                             itemsToShow += 10
-                            // Trigger a view update to reload images
-                            DispatchQueue.main.async {
-                                // Add a slight delay to let view update with new items
-                                itemsToShow += 0
-                            }
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -61,6 +54,7 @@ struct PokemonListView: View {
         )
     }
 }
+
 struct SearchBarView: View {
     @Binding var searchText: String
     

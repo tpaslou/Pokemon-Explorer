@@ -38,8 +38,7 @@ struct ContentView: View {
 
                 Button(action: {
                     // Trigger the API call
-                    vm.getPokemonByType(pokemonType: selectedType)
-                    
+                    vm.getPokemonByType(pokemonType: selectedType)                    
                     DispatchQueue.main.asyncAfter(deadline: .now()) {
                         isSearching = true
                     }
