@@ -3,8 +3,15 @@ import SwiftUI
 struct PokemonListView: View {
     @EnvironmentObject var vm: ViewModel
     @State private var selectedPokemon: Pokemon?
-    private let adaptiveColumns = [GridItem(.adaptive(minimum: 150))]
     @State private var itemsToShow = 10
+    @State private var refreshTrigger = false // Dummy state property
+
+    // Function to trigger a refresh
+    func refreshList() {
+        refreshTrigger.toggle() // Toggle to trigger a SwiftUI re-render
+    }
+
+    private let adaptiveColumns = [GridItem(.adaptive(minimum: 150))]
 
     var body: some View {
         VStack {
@@ -21,7 +28,8 @@ struct PokemonListView: View {
                             Button(action: {
                                 selectedPokemon = pokemon
                             }) {
-                                PokemonView(pokemon: pokemon) // This will trigger the cache and refresh image
+                                // Pass the callback function to PokemonView
+                                PokemonView(pokemon: pokemon, onImageLoaded: refreshList)
                             }
                         }
                     }
@@ -52,7 +60,13 @@ struct PokemonListView: View {
                 EmptyView()
             }
         )
+        .id(refreshTrigger) // Update the view ID when refreshTrigger toggles
     }
+}
+
+#Preview {
+    PokemonListView()
+        .environmentObject(ViewModel())
 }
 
 struct SearchBarView: View {

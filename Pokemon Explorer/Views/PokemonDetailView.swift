@@ -1,10 +1,3 @@
-//
-//  PokemonDetailView.swift
-//  Pokemon Explorer
-//
-//  Created by thanos loupas on 11/11/24.
-//
-
 import SwiftUI
 
 struct PokemonDetailView: View {
@@ -14,29 +7,25 @@ struct PokemonDetailView: View {
     
     var body: some View {
         VStack {
-            PokemonView(pokemon: pokemon)
-            
+            PokemonView(pokemon: pokemon) // This will show the cached image or load it
+
             VStack(spacing: 10) {
                 // Access cached Pokémon details
                 if let pokemonID = vm.pokemonIDs[pokemon.name], let details = vm.pokemonDetailsCache[pokemonID] {
                     Text("**ID**: \(details.id)")
                     Text("**Weight**: \(details.weight)")
                     Text("**Height**: \(details.height)")
-                    Text("**HP**: \(details.hp)")
-                    Text("**Attack**: \(details.attack)")
-                    Text("**Defense**: \(details.defense)")
+                    Text("**HP**: \(details.hp ?? 0)")
+                    Text("**Attack**: \(details.attack ?? 0)")        
+                    Text("**Defense**: \(details.defense ?? 0)")
                 } else {
                     Text("Loading details...")
                         .foregroundColor(.gray)
-                    
                 }
             }
             .padding()
         }
-        .onAppear {
-            // Fetch and cache details when the view appears
-            //vm.fetchAndCacheDetails(for: pokemon)
-        }
+        
     }
 }
 
