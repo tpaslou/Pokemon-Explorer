@@ -1,7 +1,5 @@
 import SwiftUI
 
-import SwiftUI
-
 struct PokemonListView: View {
     @EnvironmentObject var vm: ViewModel
     @State private var selectedPokemon: Pokemon?
