@@ -17,7 +17,7 @@ struct PokemonDetailView: View {
                     PokemonView(pokemon: pokemon)
                     
                     VStack(spacing: 10) {
-                        Text("**ID**: \(vm.pokemonDetails?.id ?? 0)")
+                        Text("**ID**: \(vm.pokemonIDs[pokemon.name] ?? 0)")
                         Text("**Weight**: \(vm.pokemonDetails?.weight ?? 0)")
                         Text("**Height**: \(vm.pokemonDetails?.height ?? 0)")
                         Text("**HP**: \(vm.pokemonDetails?.hp ?? 0)")
